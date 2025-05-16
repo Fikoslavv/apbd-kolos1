@@ -111,6 +111,8 @@ public class DBService : IDBService
         using (SqlConnection connection = new(this.connectionString))
         using (SqlCommand command = new(GET_BOOKING_BY_ID_SQL_QUERRY, connection))
         {
+            await connection.OpenAsync();
+
             command.Parameters.AddWithValue("@booking_id", booking.BookingId);
             command.Parameters.AddWithValue("@guest_id", booking.GuestId);
             command.Parameters.AddWithValue("@booking_date", booking.Date);
@@ -121,6 +123,8 @@ public class DBService : IDBService
                 command.Parameters.AddWithValue($"@booking_id{i}, @attraction_id{i}, @amount{i}", booking.Attractions[i].Amount);
                 command.Parameters.AddWithValue($"@attraction_name{i}", booking.Attractions[i].Name);
             }
+
+            command.ExecuteNonQuery();
         }
     }
 }
